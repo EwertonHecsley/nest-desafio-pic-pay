@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from "class-validator";
 
 export class CreateUserDto {
 
@@ -20,4 +20,7 @@ export class CreateUserDto {
     @MinLength(4, { message: 'Tamanho mímino da senha deve ser 4 caracteres.' })
     @MaxLength(12, { message: 'Tamanho máximo da senha deve ser 12 caracteres.' })
     senha: string;
+
+    @IsOptional()
+    id?: number
 }

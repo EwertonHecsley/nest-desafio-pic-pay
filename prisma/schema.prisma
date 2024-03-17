@@ -8,21 +8,12 @@ datasource db {
 }
 
 model User {
-  id           Int    @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   nomeCompleto String
-  cpf          String @unique
-  email        String @unique
+  cpf_cnpj     String  @unique
+  email        String  @unique
   senha        String
+  logista      Boolean @default(false)
 
   @@map("users")
-}
-
-model UserLogista {
-  id           Int    @id @default(autoincrement())
-  nomeCompleto String
-  cnpj         String @unique
-  email        String @unique
-  senha        String
-
-  @@map("usersLogistas")
 }

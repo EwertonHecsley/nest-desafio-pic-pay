@@ -26,5 +26,8 @@ export class CreateUserDto {
     logista: boolean;
 
     @IsOptional()
+    saldo: number;
+
+    @IsOptional()
     id?: number
 }

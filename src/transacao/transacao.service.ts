@@ -38,6 +38,30 @@ export class TransacaoService {
     }
 
     async sacar(data: SacarDto) {
+        const { cpf_cnpj, valor } = data;
 
+        const user = await this.userService.getUserByCPF_CNPJ(cpf_cnpj);
+        if (!user) throw new HttpException('Usuário não encontrado.', HttpStatus.NOT_FOUND);
+
+        if (valor > user.saldo) throw new HttpException('Saldo insuficiente para saque.', HttpStatus.BAD_REQUEST);
+
+        const { id } = user;
+
+        await this.prisma.user.update({
+            where: {
+                id
+            }, data: {
+                saldo: {
+                    decrement: valor
+                }
+            }
+        })
+
+        return await this.prisma.saque.create({
+            data: {
+                user_id: id,
+                valor: Number(valor)
+            }
+        })
     }
 }

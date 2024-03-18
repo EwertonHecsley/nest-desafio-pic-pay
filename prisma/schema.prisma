@@ -8,13 +8,24 @@ datasource db {
 }
 
 model User {
-  id           Int     @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   nomeCompleto String
-  cpf_cnpj     String  @unique
-  email        String  @unique
+  cpf_cnpj     String     @unique
+  email        String     @unique
   senha        String
-  logista      Boolean @default(false)
-  saldo        Int     @default(0)
+  logista      Boolean    @default(false)
+  saldo        Int        @default(0)
+  deposito     Deposito[]
 
   @@map("users")
+}
+
+model Deposito {
+  id      Int      @id @default(autoincrement())
+  usuario User     @relation(fields: [user_id], references: [id])
+  user_id Int
+  data    DateTime @default(now())
+  valor   Int
+
+  @@map("depositos")
 }

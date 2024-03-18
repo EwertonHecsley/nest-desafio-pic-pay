@@ -30,12 +30,26 @@ export class UserService {
         });
     }
 
+    async validateCPF_CNPJ(cpf_cnpj: string | number): Promise<boolean> {
+        const documentoString = String(cpf_cnpj).replace(/\D/g, '');
+
+        return (documentoString.length === 11) ?
+            /^(\d{3}\.\d{3}\.\d{3}-\d{2}|\d{11})$/.test(documentoString) :
+            (documentoString.length === 14) ?
+                /^(\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}|\d{14})$/.test(documentoString) :
+                false;
+    }
+
+    async formatCPF_CNPJ(cpf_cnpj: string): Promise<string> {
+        return cpf_cnpj.replace(/[^\d]/g, '');
+    }
+
     async createUser(dataUser: CreateUserDto): Promise<CreateUserDto> {
         const { nomeCompleto, cpf_cnpj, email, logista, senha } = dataUser;
         return await this.prisma.user.create({
             data: {
                 nomeCompleto: nomeCompleto,
-                cpf_cnpj: cpf_cnpj,
+                cpf_cnpj: await this.formatCPF_CNPJ(cpf_cnpj),
                 email: email,
                 senha: await this.hashService.hashPassword(senha),
                 logista: logista

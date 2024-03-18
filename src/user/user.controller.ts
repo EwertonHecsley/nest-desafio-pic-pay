@@ -11,12 +11,13 @@ export class UserController {
     async create(@Body() user: CreateUserDto, @Res() res: Response) {
 
         const verifyEmail = await this.userService.getUserByEmail(user.email);
+        if (verifyEmail) throw new HttpException('Email já cadastrado.', HttpStatus.BAD_REQUEST);
 
-        if (verifyEmail) throw new HttpException('Email já cadastrado.', HttpStatus.BAD_GATEWAY);
+        const validateCPF_CNPJ = await this.userService.validateCPF_CNPJ(user.cpf_cnpj);
+        if (!validateCPF_CNPJ) throw new HttpException('CPF/CNPJ inválido.', HttpStatus.BAD_REQUEST);
 
         const vrifyCPF_CNPJ = await this.userService.getUserByCPF_CNPJ(user.cpf_cnpj);
-
-        if (vrifyCPF_CNPJ) throw new HttpException('CPF/CNPJ já cadastrado.', HttpStatus.BAD_GATEWAY);
+        if (vrifyCPF_CNPJ) throw new HttpException('CPF/CNPJ já cadastrado.', HttpStatus.BAD_REQUEST);
 
         const { senha: _, ...result } = await this.userService.createUser(user);
 

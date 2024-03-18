@@ -3,6 +3,7 @@ import { TransacaoService } from './transacao.service';
 import { DepositoDto } from './dto/deposito.dto';
 import { Response } from 'express';
 import { SacarDto } from './dto/sacar.dto';
+import { TransferenciaDto } from './dto/transferir.dto';
 
 @Controller('transacao')
 export class TransacaoController {
@@ -28,5 +29,16 @@ export class TransacaoController {
         const transacao = await this.transacaoService.sacar(data);
 
         return res.status(HttpStatus.CREATED).json({ mensagem: 'Saque realizado com sucesso.', transacao });
+    }
+
+    @Post('/transferencia')
+    async transferencia(@Body() data: TransferenciaDto, @Res() res: Response) {
+        const { valor } = data;
+
+        if (valor <= 0) throw new HttpException('Valor para transferência inválido.', HttpStatus.BAD_REQUEST);
+
+        const transacao = await this.transacaoService.transferir(data);
+
+        return res.status(HttpStatus.CREATED).json({ mensagem: 'Transferência realizada com sucesso.', transacao });
     }
 }

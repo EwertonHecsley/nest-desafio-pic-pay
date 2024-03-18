@@ -40,3 +40,13 @@ model Saque {
 
   @@map("saques")
 }
+
+model Transferencia {
+  id              Int      @id @default(autoincrement())
+  user_id_origem  Int
+  user_id_destino Int
+  data            DateTime @default(now())
+  valor           Int
+
+  @@map("transferencias")
+}

@@ -18,7 +18,7 @@ export class UserController {
 
         if (vrifyCPF_CNPJ) throw new HttpException('CPF/CNPJ já cadastrado.', HttpStatus.BAD_GATEWAY);
 
-        const result = await this.userService.createUser(user);
+        const { senha: _, ...result } = await this.userService.createUser(user);
 
         return res.status(HttpStatus.CREATED).json(result);
     }

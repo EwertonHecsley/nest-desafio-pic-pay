@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { UserService } from 'src/user/user.service';
 import { DepositoDto } from './dto/deposito.dto';
+import { SacarDto } from './dto/sacar.dto';
 
 @Injectable()
 export class TransacaoService {
@@ -34,5 +35,9 @@ export class TransacaoService {
                 valor: Number(valor)
             }
         });
+    }
+
+    async sacar(data: SacarDto) {
+
     }
 }

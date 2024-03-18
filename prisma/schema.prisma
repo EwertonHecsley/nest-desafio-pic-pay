@@ -16,6 +16,7 @@ model User {
   logista      Boolean    @default(false)
   saldo        Int        @default(0)
   deposito     Deposito[]
+  Saque        Saque[]
 
   @@map("users")
 }
@@ -28,4 +29,14 @@ model Deposito {
   valor   Int
 
   @@map("depositos")
+}
+
+model Saque {
+  id      Int      @id @default(autoincrement())
+  usuario User     @relation(fields: [user_id], references: [id])
+  user_id Int
+  data    DateTime @default(now())
+  valor   Int
+
+  @@map("saques")
 }

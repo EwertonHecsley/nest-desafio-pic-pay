@@ -1,9 +1,11 @@
-import { Body, Controller, HttpException, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { TransacaoService } from './transacao.service';
 import { DepositoDto } from './dto/deposito.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { SacarDto } from './dto/sacar.dto';
 import { TransferenciaDto } from './dto/transferir.dto';
+import { JwtAuthGuard } from 'src/auth/guard/jwt.guard';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Controller('transacao')
 export class TransacaoController {
@@ -40,5 +42,17 @@ export class TransacaoController {
         const transacao = await this.transacaoService.transferir(data);
 
         return res.status(HttpStatus.CREATED).json({ mensagem: 'Transferência realizada com sucesso.', transacao });
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('/saldo')
+    async saldo(@Req() req: Request, @Res() res: Response) {
+        const { id } = req.user as CreateUserDto;
+
+        const result = await this.transacaoService.getSaldo(Number(id));
+
+        const saldo = result.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+        return res.json({ saldo });
     }
 }

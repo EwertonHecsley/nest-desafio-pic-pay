@@ -14,6 +14,14 @@ export class UserService {
         return await this.prisma.user.findMany();
     }
 
+    async getUserById(id: number): Promise<CreateUserDto> {
+        return await this.prisma.user.findUnique({
+            where: {
+                id
+            }
+        });
+    }
+
     async getUserByEmail(email: string): Promise<CreateUserDto> {
         return await this.prisma.user.findUnique({
             where: {

@@ -109,4 +109,11 @@ export class TransacaoService {
             }
         })
     }
+
+    async getSaldo(id: number) {
+        const user = await this.userService.getUserById(id);
+        if (!user) throw new HttpException('Usuário não encontrado.', HttpStatus.NOT_FOUND);
+
+        return user.saldo;
+    }
 }

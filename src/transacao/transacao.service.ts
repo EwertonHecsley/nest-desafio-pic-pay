@@ -116,4 +116,21 @@ export class TransacaoService {
 
         return user.saldo;
     }
+
+    async getExtrato(id: number) {
+        const arrTransferencias = await this.prisma.transferencia.findMany();
+        const registroDeposito = (await this.prisma.deposito.findMany()).filter((user) => user.user_id == id);
+        const registroSaque = (await this.prisma.saque.findMany()).filter((user)=> user.user_id == id);
+        const enviadas = arrTransferencias.filter((userEnv) => userEnv.user_id_origem == id);
+        const recebidas = arrTransferencias.filter((userRec)=> userRec.user_id_destino == id);
+
+        const registro = {
+            depositos: registroDeposito,
+            saques: registroSaque,
+            transferenciasEnviadas: enviadas,
+            transferenciasRecebidas: recebidas
+        }
+
+        return registro;
+    }
 }

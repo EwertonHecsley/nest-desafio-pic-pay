@@ -55,4 +55,14 @@ export class TransacaoController {
 
         return res.json({ saldo });
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('/extrato')
+    async extrato(@Req() req: Request, @Res() res: Response) {
+        const { id } = req.user as CreateUserDto;
+
+        const result = await this.transacaoService.getExtrato(id);
+
+        return res.json(result);
+    }
 }
